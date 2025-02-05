@@ -1,7 +1,6 @@
 // Sarkar-MD
 import express from "express";
 import ytSearch from "yt-search";
-import TikTokScraper from "tiktok-scraper";
 import quote from "random-quotes";
 const app = express();
 
@@ -44,34 +43,6 @@ app.get("/api/quote", (req, res) => {
     res.status(500).json({ error: "Something went wrong" });
   }
 });
-
-
-// TikTok Video Download API
-app.get("/api/tiktok", async (req, res) => {
-  try {
-    const videoUrl = req.query.url;
-
-    if (!videoUrl) {
-      return res.status(400).json({ error: "Please provide a TikTok video URL" });
-    }
-
-    // Fetch TikTok video details using tiktok-scraper
-    const videoMeta = await TikTokScraper.getVideoMeta(videoUrl);
-
-    // Extract download link and video details
-    const videoDetails = {
-      title: videoMeta.collector[0].text,
-      downloadUrl: videoMeta.collector[0].videoUrl,
-      author: videoMeta.collector[0].authorMeta.name,
-      duration: videoMeta.collector[0].videoMeta.duration,
-    };
-
-    res.json(videoDetails);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to fetch video details. Ensure the URL is correct." });
-  }
-});
-
 // Server listening
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
